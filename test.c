@@ -12,13 +12,11 @@
 do { (void)(name); (void)(key); } while (0)
 void printdata(void)
 {
-__u32 sam;
 
 
 
-sam = 50;
-}
-printf("main funk:%d\n", sam);
+
+printf("main funk:%s\n", "printdata");
 }
 int main(int argc, char **argv)
 {
