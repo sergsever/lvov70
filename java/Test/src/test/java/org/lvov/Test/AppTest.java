@@ -7,7 +7,7 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
+public class AppTest
     extends TestCase
 {
     /**
@@ -33,6 +33,7 @@ public class AppTest
      */
     public void testApp()
     {
-        assertTrue( true );
+	System.out.println( org.lvov.Test.Test.get_from_bean());
+        assertTrue(org.lvov.Test.Test.get_from_bean().equals("Hello!"));
     }
 }

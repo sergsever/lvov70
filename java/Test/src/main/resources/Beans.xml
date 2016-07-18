@@ -3,7 +3,7 @@
 "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
    <bean id="TBean" class="org.lvov.Test.TBean">
-       <property name="message" value="Hello from spring!"/>
+       <property name="message" value="Hello!"/>
 </bean>
 </beans>
 
