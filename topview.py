@@ -40,6 +40,14 @@ def gsearch(fstr):
 	doc = parse(page)
 	parse_response(doc)
 
+def ysearch(fstr):
+	query = urllib.urlencode({'q': fstr})
+	url = 'https://www.yandex.ru/search?q=' + query
+	req = urllib2.Request(url, headers = {'User-Agent' : 'Firefox'})
+	page = urlopen(req)
+	doc = parse(page)
+	parse_response(doc)
+
 if len(sys.argv) == 3:
 	system = sys.argv[1]
 	fstr = sys.argv[2]
@@ -47,6 +55,8 @@ if len(sys.argv) == 3:
 	print("fs:", fstr)
 	if system == '-g':
 		gsearch(fstr)
+	if system == '-y':
+		ysearch(fstr)
 
 else:
 	print("usage:\n./ topview.py [-g,-y] [search string]\n-g - google\n-y - yandex\n")
