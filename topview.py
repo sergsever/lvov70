@@ -10,15 +10,28 @@ import requests
 import lxml
 import lxml.html
 from lxml.html import parse
+from lxml import etree
 from lxml.etree import tostring
 #from lxml import etree
 #from HTMLParser import HTMLParser
 
-def parse_response(doc):
-	root = doc.getroot()
-	res = root.xpath("//h3[contains(@class,\"r\")]")
-	print(tostring(res[1]))
 
+def parse_response(doc):
+	results = []
+	rescount = 0
+	root = doc.getroot()
+	res = root.xpath("//h3[contains(@class,\"r\")]/a/@href")
+	for r in res:
+#		re = etree.fromstring(tostring(r))
+#		href = re.xpath("//a/@href")
+#		print(tostring(href))
+#		print(r)
+		results.append(r)
+
+		print(rescount, results[rescount])
+
+		rescount += 1
+	print(len(results))
 def gsearch(fstr):
 	query = urllib.urlencode({'q': fstr})
 	url = 'https://www.google.com/search?q=' + query
