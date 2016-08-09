@@ -16,11 +16,14 @@ from lxml.etree import tostring
 #from HTMLParser import HTMLParser
 
 
-def parse_response(doc):
+def parse_response(doc, system):
 	results = []
 	rescount = 0
 	root = doc.getroot()
-	res = root.xpath("//h3[contains(@class,\"r\")]/a/@href")
+	if system == '-g':
+		res = root.xpath("//h3[contains(@class,\"r\")]/a/@href")
+	else:
+		res = root.xpath("//a[contains(@class,\"link\")]/@href")
 	for r in res:
 #		re = etree.fromstring(tostring(r))
 #		href = re.xpath("//a/@href")
@@ -32,31 +35,28 @@ def parse_response(doc):
 
 		rescount += 1
 	print(len(results))
-def gsearch(fstr):
+def search(fstr, system):
 	query = urllib.urlencode({'q': fstr})
-	url = 'https://www.google.com/search?q=' + query
+	if system == '-g':
+		url = 'https://www.google.com/search?q=' + query
+	else:
+		 url = 'http://www.yandex.ru/search/?query=' + query + '&lr=213&p=1'
 	req = urllib2.Request(url, headers = {'User-Agent' : 'Firefox'})
 	page = urlopen(req)
+	if system == '-y':
+		print(page.read())
 	doc = parse(page)
-	parse_response(doc)
+	parse_response(doc, system)
 
-def ysearch(fstr):
-	query = urllib.urlencode({'q': fstr})
-	url = 'https://www.yandex.ru/search?q=' + query
-	req = urllib2.Request(url, headers = {'User-Agent' : 'Firefox'})
-	page = urlopen(req)
-	doc = parse(page)
-	parse_response(doc)
+
 
 if len(sys.argv) == 3:
 	system = sys.argv[1]
 	fstr = sys.argv[2]
 	print("s:", system)
 	print("fs:", fstr)
-	if system == '-g':
-		gsearch(fstr)
-	if system == '-y':
-		ysearch(fstr)
+	search(fstr, system)
+
 
 else:
 	print("usage:\n./ topview.py [-g,-y] [search string]\n-g - google\n-y - yandex\n")
