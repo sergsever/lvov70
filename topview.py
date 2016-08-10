@@ -1,9 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 import urllib
-import urllib2
-from urllib2 import urlopen
+import urllib.request
+#from urllib import urlopen
 #import urllib.parse
+import http.cookiejar
 import json
 import requests
 #from requests import urlopen
@@ -36,17 +37,34 @@ def parse_response(doc, system):
 		rescount += 1
 	print(len(results))
 def search(fstr, system):
-	query = urllib.urlencode({'q': fstr})
+#	query = urllib.urlencode({'q': fstr})
 	if system == '-g':
-		url = 'https://www.google.com/search?q=' + query
+		url = 'https://www.google.com/search?q={}'
 	else:
-		 url = 'http://www.yandex.ru/search/?query=' + query + '&lr=213&p=1'
-	req = urllib2.Request(url, headers = {'User-Agent' : 'Firefox'})
-	page = urlopen(req)
-	if system == '-y':
-		print(page.read())
-	doc = parse(page)
-	parse_response(doc, system)
+		url = "https://www.yandex.ru/search/?text={}"
+
+	cookie = http.cookiejar.CookieJar()
+#		openers = [ urllib.request.HTTPRedirectHandler(),
+#		urllib.request.HTTPHandler(debuglevel=0),
+#		urllib.request.HTTPSHandler(debuglevel=0),
+#		urllib.request.HTTPCookieProcessor(cookie)]
+#		opener = urllib.request.build_opener(*openers)
+#		html = opener.open(url.format(urllib.request.pathname2url(fstr))).read().decode("utf-8")
+#		print(html)
+
+	req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla', 'cookie' : '751d106e', 'Infohash' : '47b90cdddd1c5ad183e858d6df2a88ce89c83628', 'host' : 'ya.ru'})
+#	cookie.add_cookie_header(req)
+	try:
+		page = urllib.request.urlopen(req, timeout = 10)
+#		print(page.readlines())
+		doc = parse(page)
+		print(doc)
+		parse_response(doc, system)
+	except urllib.error.URLError as e:
+		print(e)
+#	if system == '-y':
+
+#	print(doc)
 
 
 
