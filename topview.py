@@ -21,10 +21,12 @@ def parse_response(doc, system):
 	results = []
 	rescount = 0
 	root = doc.getroot()
+#	print("root:", root)
 	if system == '-g':
-		res = root.xpath("//h3[contains(@class,\"r\")]/a/@href")
+		res = root.xpath("//h3[contains(@class,\"\")]/a/@href")
 	else:
-		res = root.xpath("//a[contains(@class,\"link\")]/@href")
+#		print(tostring(root))
+		res = root.xpath("//a[contains(@class,\"url\")]/@href")
 	for r in res:
 #		re = etree.fromstring(tostring(r))
 #		href = re.xpath("//a/@href")
@@ -43,7 +45,7 @@ def search(fstr, system):
 	else:
 		url = "https://www.yandex.ru/search/?text={}"
 
-	cookie = http.cookiejar.CookieJar()
+#	cookie = http.cookiejar.CookieJar()
 #		openers = [ urllib.request.HTTPRedirectHandler(),
 #		urllib.request.HTTPHandler(debuglevel=0),
 #		urllib.request.HTTPSHandler(debuglevel=0),
@@ -51,14 +53,20 @@ def search(fstr, system):
 #		opener = urllib.request.build_opener(*openers)
 #		html = opener.open(url.format(urllib.request.pathname2url(fstr))).read().decode("utf-8")
 #		print(html)
-
-	req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla', 'cookie' : '751d106e', 'Infohash' : '47b90cdddd1c5ad183e858d6df2a88ce89c83628', 'host' : 'ya.ru'})
+	url = url.format(urllib.request.pathname2url(fstr))
+	print("url:", url)
+	if system == '-y':
+		req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla', 'cookie' : '751d106e', 'Infohash' : '47b90cdddd1c5ad183e858d6df2a88ce89c83628', 'host' : 'ya.ru'})
+	else:
+		req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla'})
 #	cookie.add_cookie_header(req)
 	try:
 		page = urllib.request.urlopen(req, timeout = 10)
-#		print(page.readlines())
-		doc = parse(page)
-		print(doc)
+#		print(page.read().splitlines(True))
+
+		parser = etree.HTMLParser(encoding='ISO-8859-15')
+		doc = parse(page, parser)
+#			print(doc)
 		parse_response(doc, system)
 	except urllib.error.URLError as e:
 		print(e)
