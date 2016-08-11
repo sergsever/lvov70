@@ -12,6 +12,7 @@ import lxml
 import lxml.html
 from lxml.html import parse
 from lxml import etree
+from bs4 import UnicodeDammit
 from lxml.etree import tostring
 #from lxml import etree
 #from HTMLParser import HTMLParser
@@ -63,8 +64,10 @@ def search(fstr, system):
 	try:
 		page = urllib.request.urlopen(req, timeout = 10)
 #		print(page.read().splitlines(True))
-
-		parser = etree.HTMLParser(encoding='ISO-8859-15')
+#'ISO-8859-15'
+#		print("h:", page.headers.getheader('content-type'))
+#		d = UnicodeDammit(page.content, is_html=True)
+		parser = etree.HTMLParser(encoding='windows-1251')
 		doc = parse(page, parser)
 #			print(doc)
 		parse_response(doc, system)
