@@ -21,53 +21,36 @@ from lxml.etree import tostring
 def parse_response(doc, system):
 	results = []
 	rescount = 0
+
 	root = doc.getroot()
-#	print("root:", root)
 	if system == '-g':
 		res = root.xpath("//h3[contains(@class,\"\")]/a/@href")
 	else:
-#		print(tostring(root))
 		res = root.xpath("//a[contains(@class,\"url\")]/@href")
 	for r in res:
-#		re = etree.fromstring(tostring(r))
-#		href = re.xpath("//a/@href")
-#		print(tostring(href))
-#		print(r)
 		results.append(r)
-
 		print(rescount, results[rescount])
-
 		rescount += 1
 	print(len(results))
 def search(fstr, system):
-#	query = urllib.urlencode({'q': fstr})
 	if system == '-g':
 		url = 'https://www.google.com/search?q={}'
 	else:
 		url = "https://www.yandex.ru/search/?text={}"
 
-#	cookie = http.cookiejar.CookieJar()
-#		openers = [ urllib.request.HTTPRedirectHandler(),
-#		urllib.request.HTTPHandler(debuglevel=0),
-#		urllib.request.HTTPSHandler(debuglevel=0),
-#		urllib.request.HTTPCookieProcessor(cookie)]
-#		opener = urllib.request.build_opener(*openers)
-#		html = opener.open(url.format(urllib.request.pathname2url(fstr))).read().decode("utf-8")
-#		print(html)
+
 	url = url.format(urllib.request.pathname2url(fstr))
 	print("url:", url)
 	if system == '-y':
 		req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla', 'cookie' : '751d106e', 'Infohash' : '47b90cdddd1c5ad183e858d6df2a88ce89c83628', 'host' : 'ya.ru'})
 	else:
 		req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla'})
-#	cookie.add_cookie_header(req)
 	try:
 		page = urllib.request.urlopen(req, timeout = 10)
-#		print(page.read().splitlines(True))
-#'ISO-8859-15'
-#		print("h:", page.headers.getheader('content-type'))
-#		d = UnicodeDammit(page.content, is_html=True)
-		parser = etree.HTMLParser(encoding='windows-1251')
+		if system == '-y':
+			parser = etree.HTMLParser(encoding='windows-1251')
+		else:
+			 parser = etree.HTMLParser(encoding='utf-8')
 		doc = parse(page, parser)
 #			print(doc)
 		parse_response(doc, system)
