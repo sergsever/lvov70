@@ -18,6 +18,7 @@ import re
 #pattern
 from pattern.web import Google, plaintext
 from pattern.web import SEARCH
+import subprocess
 
 #from lxml import etree
 #from HTMLParser import HTMLParser
@@ -42,6 +43,11 @@ def parse_response(_results, system):
 		print(rescount, results[addr])
 		rescount += 1
 	print(len(results))
+	cmd = ['host', '-t', 'txt', results.keys()[3], 'dnsc1.m10.cair.ru']
+	p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+			     stderr=subprocess.PIPE)
+	out = p.communicate('foo\nfoofoo\n')
+	print("out:", out)
 def search(fstr, system):
 	if system == '-g':
 		url = 'https://www.google.com/search?q={}'
