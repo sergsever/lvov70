@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import sys
 import urllib
-import urllib.request
+#import urllib.request
 #from urllib import urlopen
 #import urllib.parse
-import http.cookiejar
+#import http.cookiejar
 import json
 import requests
 #from requests import urlopen
@@ -14,22 +14,31 @@ from lxml.html import parse
 from lxml import etree
 from bs4 import UnicodeDammit
 from lxml.etree import tostring
+import re
+#pattern
+from pattern.web import Google, plaintext
+from pattern.web import SEARCH
+
 #from lxml import etree
 #from HTMLParser import HTMLParser
 
 
 def parse_response(doc, system):
-	results = []
+	results = {}
 	rescount = 0
 
 	root = doc.getroot()
 	if system == '-g':
 		res = root.xpath("//h3[contains(@class,\"\")]/a/@href")
 	else:
-		res = root.xpath("//a[contains(@class,\"url\")]/@href")
+		res = root.xpath("//a[contains(@class,\"url\")]/@href[contains(\"url\")]/@url/@q")
 	for r in res:
-		results.append(r)
-		print(rescount, results[rescount])
+		p = re.findall("http[s]?://[\w|\.]+", r)
+		addr = str(p)
+		addr = addr[9:100]
+		print("re:", addr)
+		results[addr] = r
+		print(rescount, results[addr])
 		rescount += 1
 	print(len(results))
 def search(fstr, system):
@@ -39,22 +48,26 @@ def search(fstr, system):
 		url = "https://www.yandex.ru/search/?text={}"
 
 
-	url = url.format(urllib.request.pathname2url(fstr))
+#	url = url.format(urllib.request.pathname2url(fstr))
 	print("url:", url)
-	if system == '-y':
-		req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla', 'cookie' : '751d106e', 'Infohash' : '47b90cdddd1c5ad183e858d6df2a88ce89c83628', 'host' : 'ya.ru'})
-	else:
-		req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla'})
+#	if system == '-y':
+#		req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla', 'cookie' : '751d106e', 'Infohash' : '47b90cdddd1c5ad183e858d6df2a88ce89c83628', 'host' : 'ya.ru'})
+#	else:
+#		req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla'})
+
 	try:
-		page = urllib.request.urlopen(req, timeout = 10)
+#		page = urllib.request.urlopen(req, timeout = 10)
+		engine = Google(license=None, language="en")
+		results = engine.search(fstr, type=SEARCH)
+		print("result:", results[0].text)
 		if system == '-y':
 			parser = etree.HTMLParser(encoding='windows-1251')
 		else:
 			 parser = etree.HTMLParser(encoding='utf-8')
-		doc = parse(page, parser)
+		doc = parse(results[0].data, parser)
 #			print(doc)
 		parse_response(doc, system)
-	except urllib.error.URLError as e:
+	except Exception as e:
 		print(e)
 #	if system == '-y':
 
