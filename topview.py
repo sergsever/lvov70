@@ -23,17 +23,18 @@ from pattern.web import SEARCH
 #from HTMLParser import HTMLParser
 
 
-def parse_response(doc, system):
+def parse_response(_results, system):
 	results = {}
 	rescount = 0
 
-	root = doc.getroot()
-	if system == '-g':
-		res = root.xpath("//h3[contains(@class,\"\")]/a/@href")
-	else:
-		res = root.xpath("//a[contains(@class,\"url\")]/@href[contains(\"url\")]/@url/@q")
-	for r in res:
-		p = re.findall("http[s]?://[\w|\.]+", r)
+#	root = doc.getroot()
+#	if system == '-g':
+#		res = root.xpath("//h3[contains(@class,\"\")]/a/@href")
+#	else:
+#		res = root.xpath("//a[contains(@class,\"url\")]/@href[contains(\"url\")]/@url/@q")
+	for r in _results:
+		p = re.findall("http[s]?://[\w|\.]+", r.url)
+		print("p:", p)
 		addr = str(p)
 		addr = addr[9:100]
 		print("re:", addr)
@@ -58,15 +59,15 @@ def search(fstr, system):
 	try:
 #		page = urllib.request.urlopen(req, timeout = 10)
 		engine = Google(license=None, language="en")
-		results = engine.search(fstr, type=SEARCH)
+		results = engine.search(fstr, count=10,type=SEARCH)
 		print("result:", results[0].text)
 		if system == '-y':
 			parser = etree.HTMLParser(encoding='windows-1251')
 		else:
 			 parser = etree.HTMLParser(encoding='utf-8')
-		doc = parse(results[0].data, parser)
+#		doc = parse(results[0].download(timeout=10), parser)
 #			print(doc)
-		parse_response(doc, system)
+		parse_response(results, system)
 	except Exception as e:
 		print(e)
 #	if system == '-y':
