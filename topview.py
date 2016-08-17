@@ -22,7 +22,13 @@ import subprocess
 
 #from lxml import etree
 #from HTMLParser import HTMLParser
-
+def find_categories(results):
+	categories = []
+	cmd = ['host', '-t', 'txt', results.keys()[0], 'dnsc1.m10.cair.ru']
+	p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+			     stderr=subprocess.PIPE)
+	out = p.communicate('foo\nfoofoo\n')
+	print(out)
 
 def parse_response(_results, system):
 	results = {}
@@ -43,11 +49,9 @@ def parse_response(_results, system):
 		print(rescount, results[addr])
 		rescount += 1
 	print(len(results))
-	cmd = ['host', '-t', 'txt', results.keys()[3], 'dnsc1.m10.cair.ru']
-	p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-			     stderr=subprocess.PIPE)
-	out = p.communicate('foo\nfoofoo\n')
-	print("out:", out)
+	tres = {'www.google.ru' : 'test'}
+	find_categories(tres)
+
 def search(fstr, system):
 	if system == '-g':
 		url = 'https://www.google.com/search?q={}'
