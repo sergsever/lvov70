@@ -22,13 +22,36 @@ import subprocess
 
 #from lxml import etree
 #from HTMLParser import HTMLParser
+
+class Result:
+	def __init__(self,url, res, categories):
+		self.url = url
+		self.res = res
+		self.categories = categories
+	def set_categories(self, _categories):
+		self.categories = _categories
+	def get_url(self):
+		return self.url
+
+	
 def find_categories(results):
 	categories = []
-	cmd = ['host', '-t', 'txt', results.keys()[0], 'dnsc1.m10.cair.ru']
-	p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+	for key in results.keys():
+		categories = []
+		result = results[key]
+		cmd = ['host', '-ttxt', result.get_url(), 'dnsc1.m10.cair.ru']
+		p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
 			     stderr=subprocess.PIPE)
-	out = p.communicate('foo\nfoofoo\n')
-	print(out)
+		out = str(p.communicate('foo\nfoofoo\n'))
+		print(out)
+		cats = re.findall("[\d|\,]+", out)
+		if len(cats) >= 7:
+			strs = cats[7].split(',')
+			for s in strs:
+				categories.append(int(s))
+
+		result.set_categories(categories)
+		print("cats:", categories)
 
 def parse_response(_results, system):
 	results = {}
@@ -40,17 +63,18 @@ def parse_response(_results, system):
 #	else:
 #		res = root.xpath("//a[contains(@class,\"url\")]/@href[contains(\"url\")]/@url/@q")
 	for r in _results:
-		p = re.findall("http[s]?://[\w|\.]+", r.url)
+		p = re.findall("http[s]://?[\w|\.]+", r.url)
 		print("p:", p)
 		addr = str(p)
 		addr = addr[9:100]
 		print("re:", addr)
-		results[addr] = r
+		result = Result(url=addr, res=r, categories=[])
+		results[addr] = result
 		print(rescount, results[addr])
 		rescount += 1
 	print(len(results))
-	tres = {'www.google.ru' : 'test'}
-	find_categories(tres)
+	tres = {'www.specialist.ru' : 'test'}
+	find_categories(results)
 
 def search(fstr, system):
 	if system == '-g':
