@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
-import urllib
-#import urllib.request
+import urllib2
+import requests
 #from urllib import urlopen
 #import urllib.parse
 #import http.cookiejar
@@ -33,7 +33,14 @@ class Result:
 	def get_url(self):
 		return self.url
 
-	
+def get_resources(category):
+	url = 'https://netpolice-info-data-aggregation-v1.p.mashape.com'
+	headers = {'X-Mashape-Key' : 'Key'}
+#	req = requests.Request('GET',url, data='user_id=1')
+#	req = urllib2.request.Request(url, headers = {'User-Agent' : 'Mozilla', 'cookie' : '751d106e', 'Infohash' : '47b90cdddd1c5ad183e858d6df2a88ce89c83628', 'host' : 'ya.ru'})
+	resp = requests.get(url, headers=headers)
+	print("resp:", resp.text)
+
 def find_categories(results):
 	categories = []
 	for key in results.keys():
@@ -56,7 +63,7 @@ def find_categories(results):
 def parse_response(_results, system):
 	results = {}
 	rescount = 0
-
+	
 #	root = doc.getroot()
 #	if system == '-g':
 #		res = root.xpath("//h3[contains(@class,\"\")]/a/@href")
@@ -73,8 +80,9 @@ def parse_response(_results, system):
 		print(rescount, results[addr])
 		rescount += 1
 	print(len(results))
+	get_resources(category=64)
 	tres = {'www.specialist.ru' : 'test'}
-	find_categories(results)
+#	find_categories(results)
 
 def search(fstr, system):
 	if system == '-g':
