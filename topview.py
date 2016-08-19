@@ -35,10 +35,11 @@ class Result:
 
 def get_resources(category):
 	url = 'https://netpolice-info-data-aggregation-v1.p.mashape.com'
-	headers = {'X-Mashape-Key' : 'Key'}
+	headers = {u"X-Mashape-Key" : u"Key"}
+	data = {u"user_id" : u"id"}
 #	req = requests.Request('GET',url, data='user_id=1')
 #	req = urllib2.request.Request(url, headers = {'User-Agent' : 'Mozilla', 'cookie' : '751d106e', 'Infohash' : '47b90cdddd1c5ad183e858d6df2a88ce89c83628', 'host' : 'ya.ru'})
-	resp = requests.get(url, headers=headers)
+	resp = requests.get(url, headers=headers, data=data)
 	print("resp:", resp.text)
 
 def find_categories(results):
