@@ -71,19 +71,20 @@ def parse_response(_results, system):
 #	else:
 #		res = root.xpath("//a[contains(@class,\"url\")]/@href[contains(\"url\")]/@url/@q")
 	for r in _results:
-		p = re.findall("http[s]://?[\w|\.]+", r.url)
+		p = re.findall("http[s]?://[\w|\.]+", r.url)
 		print("p:", p)
-		addr = str(p)
-		addr = addr[9:100]
-		print("re:", addr)
-		result = Result(url=addr, res=r, categories=[])
-		results[addr] = result
+		if len(p) > 0:
+			addr = str(p[0])
+			addr = addr[7:100]
+			print("re:", addr)
+			result = Result(url=addr, res=r, categories=[])
+			results[addr] = result
 		print(rescount, results[addr])
 		rescount += 1
 	print(len(results))
-	get_resources(category=64)
-	tres = {'www.specialist.ru' : 'test'}
-#	find_categories(results)
+#	tres = {'www.specialist.ru' : 'test'}
+	find_categories(results)
+
 
 def search(fstr, system):
 	if system == '-g':
