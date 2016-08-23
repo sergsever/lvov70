@@ -1,22 +1,30 @@
 /*test*/
 #include "stdlib.h"
+//#include "str.h"
 #include "test.h"
 
 
 #include <linux/types.h>
 #include "stdio.h"
-# define lockdep_init_map(lock, name, key, sub) \
-		do { (void)(name); (void)(key); } while (0)
 
-#define lockdep(key, name) \
-do { (void)(name); (void)(key); } while (0)
+typedef struct TfwStr{
+	struct sk_buff	*skb;
+	unsigned long	len;
+	unsigned char	eolen;
+
+	unsigned int	chunknum : 24;
+	unsigned int	flags : 8;
+	union {
+	char *data;
+	struct TfwStr *chunks;
+};
+} TfwStr;
 void printdata(void)
 {
+	 TfwStr s= {.data = "test", .len = 4};
+	TfwStr ds = {.chunks = &s, .len = 4};
 
-
-
-
-printf("main funk:%s\n", "printdata");
+	printf("tfwstr:%s\n", ds.chunks->data);
 }
 int main(int argc, char **argv)
 {
