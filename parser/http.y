@@ -1,18 +1,18 @@
 %{
 #include <stdio.h>
+
+void
+yyerror(char const *msg)
+{
+	fprintf(stderr, "%s\n", msg);
+}
+int main()
+{
+	yyparse();
+}
 %}
+%token CRLF METHOD_GET HTTP HTTP_VER URI
 %%
-CRLF: "\r\n"
-METHOD_GET: "GET?";
-METHOD_HEAD: "HEAD?";
-http: "http://?";
-https: "https://?";
-HTTP_VER: "HTTP/1.0"
-	| "HTTP/1.1";
-uri_string: "/?"
-	| "/?[a-z|.]+";
-URI: http | https uri_string;
-METHOD: METHOD_GET
-	| METHOD_HEAD;
-QUERY: METHOD URI HTTP_VER CRLF;
+QUERY: METHOD_GET URI HTTP HTTP_VER CRLF;
 %%
+
