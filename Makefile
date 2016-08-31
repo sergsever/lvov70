@@ -10,6 +10,8 @@ test.o: test.c
 build: test.o
 	gcc -o test -Wall test.o
 #	ld test.o -o test -lc --dynamic-linker /lib64/ld-2.17.so
+y.tab.h: parser/http.y
+	yacc -d parser/http.y
 y.tab.c: parser/http.y
 	yacc -d parser/http.y
 lex.yy.c: parser/http.l

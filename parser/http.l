@@ -5,9 +5,10 @@
 %option noyywrap
 
 WORD	[a-z|\.]*
-HTTP	"http://"
 %%
 "GET"	printf("lex:GET:%s\n", yytext); return METHOD_GET;
-"{HTTP}"."{WORD}+" printf("lex:URI:%s\n", yytext); return URI;
+"http://" printf("lex:http:%s\n", yytext); return http;
 "\r\n"	printf("lex:CRLF:%s\n", yytext); return CRLF;
+{WORD} printf("lex:URI:%s\n", yytext); return URI;
+
 %%
