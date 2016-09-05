@@ -11,8 +11,12 @@ int main()
 	yyparse();
 }
 %}
-%token CRLF METHOD_GET HTTP HTTP_VER URI http
+%token CRLF METHOD_GET HTTP HTTP_VER SIMPLE_URI http addr
 %%
-QUERY: METHOD_GET http URI HTTP HTTP_VER CRLF http;
+URI
+: http '//' addr;
+| SIMPLE_URI;
+QUERY: METHOD_GET URI HTTP_VER CRLF;
+
 %%
 
