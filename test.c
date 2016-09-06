@@ -29,6 +29,6 @@ void printdata(void)
 int main(int argc, char **argv)
 {
 
-printdata();
-return 0;
+	printdata();
+	return 0;
 }

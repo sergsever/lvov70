@@ -13,10 +13,11 @@ int main()
 %}
 %token CRLF METHOD_GET HTTP HTTP_VER SIMPLE_URI http addr
 %%
-URI
-: http '//' addr;
-| SIMPLE_URI;
-QUERY: METHOD_GET URI HTTP_VER CRLF;
-
+QUERY: 
+METHOD_GET SIMPLE_URI CRLF CRLF
+{
+	printf("yacc:query is Ok.\n");
+}
+;
 %%
 
