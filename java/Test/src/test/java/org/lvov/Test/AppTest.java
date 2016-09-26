@@ -35,5 +35,8 @@ public class AppTest
     {
 	System.out.println( org.lvov.Test.Test.get_from_bean());
         assertTrue(org.lvov.Test.Test.get_from_bean().equals("Hello!"));
+	org.lvov.Test.Test test = new org.lvov.Test.Test();
+
+	String hib_res = test.get_from_db(); 
     }
 }

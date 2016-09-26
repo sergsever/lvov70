@@ -5,6 +5,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.lvov.Test.Htest;
+import org.hibernate.Transaction;
 class Test {
 private SessionFactory sessionfactory;
 public static void main(String[] args) {
@@ -17,8 +18,12 @@ public String get_from_db()
 return "";*/
 //var config  = new Configuration().configure();
 //config.CurrentSessionContext<WebSessionContext>();
-Session session = new Configuration().configure().buildSessionFactory().getCurrentSession();
-Htest t = (Htest)session.get(Htest.class, new Integer(1)); 
+Configuration conf = new Configuration().configure();
+	conf.addAnnotatedClass(Htest.class);
+Session session = conf.buildSessionFactory().getCurrentSession();
+Transaction tx = session.beginTransaction(); 
+Htest t = (Htest)session.get(Htest.class, new Long(1)); 
+tx.commit();
 return t.get_name();
 
 } 
