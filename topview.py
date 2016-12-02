@@ -71,7 +71,7 @@ def parse_response(_results, system):
 #	else:
 #		res = root.xpath("//a[contains(@class,\"url\")]/@href[contains(\"url\")]/@url/@q")
 	for r in _results:
-		p = re.findall("http[s]?://[\w|\.]+", r.url)
+		p = re.findall("http[s]?://[\w|\.]+\n", r.url)
 		print("p:", p)
 		if len(p) > 0:
 			addr = str(p[0])

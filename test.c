@@ -24,7 +24,7 @@ void printdata(void)
 	 TfwStr s= {.data = "test", .len = 4};
 	TfwStr ds = {.chunks = &s, .len = 4};
 
-	printf("tfwstr:%s\n", ds.chunks->data);
+	printf("tfwstr:%d\n", __builtin_types_compatible_p(typeof(s), TfwStr));
 }
 int main(int argc, char **argv)
 {
